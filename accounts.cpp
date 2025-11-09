@@ -1,6 +1,6 @@
 #include<iostream>
 #include<fstream>
-#include<string>
+#include<cstring>
 #include"accounts.h"
 #include"HashPassword.h"
 using namespace std;
@@ -20,7 +20,13 @@ void Account::createAccount(){
     cin>> name;
 
     cout<<"Set Password:";
-    cin>> passHash;
+    cin>> pass;
+
+    const char*gensalt=Protection::generateSalt(length);
+    strcpy(Account::salt, gensalt);
+    const char* hashed = Protection::HashPass(pass, salt);
+    strcpy(passHash,hashed);
+
     
     cout<<"Enter Initial Balence:";
     cin>>Account::accBalance;
@@ -38,6 +44,7 @@ bool Account::loginAccount() {
 
     int inId;
     char inpass[30];
+    char inpassHash[30];
     cout<<"Enter Account ID: ";
     cin>>inId;;
     cout<<"Enter Password: ";
@@ -45,9 +52,14 @@ bool Account::loginAccount() {
     
     bool found=false;
     while(file.read((char*)this, sizeof(*this))) {
-        if(accId == inId && strcmp(passHash,inpass)==0) {
-            cout<<"Login successful. Welcome "<<name<<"!"<<endl;
-            found=true;
+        if(accId == inId ) {
+            const char* enteredHash = Protection::HashPass(inpass, salt);
+            if(strcmp(passHash,inpassHash)==0){
+                cout<<"Login successful. Welcome "<<name<<"!"<<endl;
+                found=true;
+            }else {
+                cout << "\n❌ Wrong password.\n";
+            }
             break;
         }
     }

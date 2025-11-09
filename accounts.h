@@ -11,6 +11,9 @@ class Account{
     int accId;
     char name[30];
     double accBalance;
+    int length=8;
+    char pass[30];
+    char salt[20];
     char passHash[30];
     
     public:
