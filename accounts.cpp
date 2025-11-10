@@ -85,7 +85,8 @@ void Account::editAccount() {
     cout<<"Enter Account ID to edit: ";
     cin>>searchId;
     cout<<"Enter Password: ";
-    cin>>inpass;
+    cin>>pass;
+    
 
 
     bool found=false;
