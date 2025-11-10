@@ -22,7 +22,11 @@ class Account{
         bool loginAccount();
         void displayAccount() const;
         void editAccount();
+        int getID();
+        const char* getName();
+        double getBalance();
         void deleteAccount();
+        void change_balence(int accid,char *sign,double amt);
 };
 
 #endif
