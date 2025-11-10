@@ -1,183 +1,233 @@
-#include<iostream>
-#include<fstream>
-#include<cstring>
-#include"accounts.h"
-#include"HashPassword.h"
+#include <iostream>
+#include <fstream>
+#include <cstring>
+#include "accounts.h"
+#include "HashPassword.h"
 using namespace std;
 
-Account::Account(): accId(0),accBalance(0.0) {
-    strcpy(name,"");
-    strcpy(passHash,"");
+Account::Account() : accId(0), accBalance(0.0) {
+    strcpy(name, "");
+    strcpy(passHash, "");
+    strcpy(salt, "");
 }
 
-
-void Account::createAccount(){
+void Account::createAccount() {
     ofstream file("data/accounts.dat", ios::binary | ios::app);
-    cout<<"Enter Account Id:";
-    cin>>Account::accId;
+    if (!file) {
+        cout << "Error opening file.\n";
+        return;
+    }
 
-    cout<<"Enter Account holder name:";
-    cin>> name;
+    cout << "Enter Account ID: ";
+    cin >> accId;
+    cout << "Enter Account Holder Name: ";
+    cin >> name;
 
-    cout<<"Set Password:";
-    cin>> pass;
+    char pass[30];
+    cout << "Set Password: ";
+    cin >> pass;
 
-    const char*gensalt=Protection::generateSalt(length);
-    strcpy(Account::salt, gensalt);
+    const char* genSalt = Protection::generateSalt(16);
+    strcpy(salt, genSalt);
+
     const char* hashed = Protection::HashPass(pass, salt);
-    strcpy(passHash,hashed);
+    strcpy(passHash, hashed);
 
-    
-    cout<<"Enter Initial Balence:";
-    cin>>Account::accBalance;
+    cout << "Enter Initial Balance: ";
+    cin >> accBalance;
 
-    file.write((char*)this,sizeof(*this));
+    file.write(reinterpret_cast<char*>(this), sizeof(*this));
     file.close();
-    cout<<"Account created successfully!"<<endl;
+    cout << "Account created successfully!\n";
 }
+
 bool Account::loginAccount() {
-    ifstream file("data/accounts.dat",ios::binary);
-    if(!file) {
-        cout<<"No accounts exist."<<endl;
+    ifstream file("data/accounts.dat", ios::binary);
+    if (!file) {
+        cout << "No accounts exist.\n";
         return false;
     }
 
     int inId;
-    char inpass[30];
-    char inpassHash[30];
-    cout<<"Enter Account ID: ";
-    cin>>inId;;
-    cout<<"Enter Password: ";
-    cin>>inpass;
-    
-    bool found=false;
-    while(file.read((char*)this, sizeof(*this))) {
-        if(accId == inId ) {
-            const char* enteredHash = Protection::HashPass(inpass, salt);
-            if(strcmp(passHash,inpassHash)==0){
-                cout<<"Login successful. Welcome "<<name<<"!"<<endl;
-                found=true;
-            }else {
-                cout << "\n❌ Wrong password.\n";
+    char inputPass[30];
+    cout << "Enter Account ID: ";
+    cin >> inId;
+    cout << "Enter Password: ";
+    cin >> inputPass;
+
+    bool found = false;
+    while (file.read(reinterpret_cast<char*>(this), sizeof(*this))) {
+        if (accId == inId) {
+            const char* hashedInput = Protection::HashPass(inputPass, salt);
+            if (strcmp(passHash, hashedInput) == 0) {
+                cout << "Login successful. Welcome " << name << "!\n";
+                found = true;
+            } else {
+                cout << "Incorrect password.\n";
             }
             break;
         }
     }
-    if(!found) {
-        cout<<"Invalid Credentials."<<endl;
-    }
+
+    if (!found)
+        cout << "Account not found.\n";
+
     file.close();
     return found;
 }
+
 void Account::displayAccount() const {
-    cout<<"Account ID: "<<accId<<endl;;
-    cout<<"Account Holder: "<<name;
-    cout<<"Balance: "<<accBalance;
+    cout << "\n--- Account Details ---\n";
+    cout << "Account ID     : " << accId << endl;
+    cout << "Account Holder : " << name << endl;
+    cout << "Balance        : " << accBalance << endl;
+    cout << "------------------------\n";
 }
+
 void Account::editAccount() {
-    fstream file("data/accounts.dat",ios::binary| ios::in| ios::out);
-    if(!file) {
-        cout<<"No accounts exist."<<endl;
+    fstream file("data/accounts.dat", ios::binary | ios::in | ios::out);
+    if (!file) {
+        cout << "No accounts exist.\n";
         return;
     }
+
     int searchId;
-    char inpass[30];
-    cout<<"Enter Account ID to edit: ";
-    cin>>searchId;
-    cout<<"Enter Password: ";
-    cin>>inpass;
+    char inputPass[30];
+    cout << "Enter Account ID to edit: ";
+    cin >> searchId;
+    cout << "Enter Password: ";
+    cin >> inputPass;
 
+    bool found = false, authorized = false;
 
-    bool found=false;
-    bool authorized= false;
-    while(file.read((char*)this,sizeof(*this))) {
-        if(accId==searchId) {
-            found=true;
-            if(strcmp(passHash,inpass)==0) {
-                authorized=true;
-                cout<<"\nAuthentication Successful."<<endl;
-                cout<<"Current Details:"<<endl;
+    while (file.read(reinterpret_cast<char*>(this), sizeof(*this))) {
+        if (accId == searchId) {
+            found = true;
+
+            const char* hashedInput = Protection::HashPass(inputPass, salt);
+            if (strcmp(passHash, hashedInput) == 0) {
+                authorized = true;
+                cout << "\nAuthentication Successful.\n";
                 displayAccount();
 
-                cout<<endl;
-                cout<<"Enter New Name: ";
-                cin>>name;
+                cout << "\nEnter New Name: ";
+                cin >> name;
 
-                cout<<"Enter New Password";
-                cin>> passHash;
+                char newPass[30];
+                cout << "Enter New Password: ";
+                cin >> newPass;
 
-                int pos=-1*sizeof(*this);
-                file.seekp(pos,ios::cur);
-                file.write((char*)this,sizeof(*this));
-                cout << "\n Account details updated successfully!\n";
-            }
-            else {
-                cout<<"Incorrect Password. Access denied."<<endl;
+                const char* newSalt = Protection::generateSalt(16);
+                strcpy(salt, newSalt);
+
+                const char* newHash = Protection::HashPass(newPass, salt);
+                strcpy(passHash, newHash);
+
+                int pos = -1 * static_cast<int>(sizeof(*this));
+                file.seekp(pos, ios::cur);
+                file.write(reinterpret_cast<char*>(this), sizeof(*this));
+                cout << "Account details updated successfully!\n";
+            } else {
+                cout << "Incorrect Password. Access denied.\n";
             }
             break;
         }
     }
+
     if (!found)
         cout << "Account not found.\n";
 
     file.close();
 }
+
 void Account::deleteAccount() {
-    ifstream inFile("data/accounts.dat",ios::binary);
-    ofstream outFile("data/temp.dat",ios::binary);
-    if(!inFile || !outFile) {
-        cout<<"Error opening file."<<endl;
+    ifstream inFile("data/accounts.dat", ios::binary);
+    ofstream outFile("data/temp.dat", ios::binary);
+    if (!inFile || !outFile) {
+        cout << "Error opening file.\n";
         return;
     }
+
     int delId;
-    char delpass[30];
-    cout<<"Enter Account Id to Delete: ";
-    cin>>delId;
-    cout<<"Enter Password: ";
-    cin>>delpass;
+    char inputPass[30];
+    cout << "Enter Account ID to delete: ";
+    cin >> delId;
+    cout << "Enter Password: ";
+    cin >> inputPass;
 
-    bool found=false;
-    bool deleted=false;
+    bool found = false, deleted = false;
 
-    while(inFile.read((char*)this,sizeof(*this))) {
-        if(accId==delId) {
-            found=true;
-            if(strcmp(passHash,delpass)==0) {
-                deleted=true;
-                cout<<"Account "<<accId<<"( "<<name<<" ) deleted Successfully.\n";
+    while (inFile.read(reinterpret_cast<char*>(this), sizeof(*this))) {
+        if (accId == delId) {
+            found = true;
+            const char* hashedInput = Protection::HashPass(inputPass, salt);
+            if (strcmp(passHash, hashedInput) == 0) {
+                cout << "Account " << accId << " (" << name << ") deleted successfully.\n";
+                deleted = true;
                 continue;
-            }
-            else {
-                cout<<"incorrect password. Deletion aborted.\n";
-                outFile.write((char*)this,sizeof(*this));
+            } else {
+                cout << "Incorrect password. Deletion aborted.\n";
             }
         }
-        else {
-            outFile.write((char*)this,sizeof(*this));
-        }
+        outFile.write(reinterpret_cast<char*>(this), sizeof(*this));
     }
+
     inFile.close();
     outFile.close();
-    if(!deleted && !found) {
+
+    if (!found) {
         remove("data/temp.dat");
-        cout<<"Account not found.\n";
+        cout << "Account not found.\n";
         return;
     }
-    if (!deleted && found) {
-        if (remove("data/accounts.dat") != 0) {
-            cout << "Error removing original file.\n";
-        } else {
-            if (rename("data/temp.dat", "data/accounts.dat") != 0) {
-                cout << "Error renaming temp file.\n";
-            }
-        }
-        return;
-    }
-    if (remove("data/accounts.dat") != 0) {
-        cout << "Error removing original file.\n";
-    } else {
-        if (rename("data/temp.dat", "data/accounts.dat") != 0) {
-            cout << "Error renaming temp file.\n";
-        }
-    }
+
+    remove("data/accounts.dat");
+    rename("data/temp.dat", "data/accounts.dat");
 }
+
+void Account::change_balence(int accid, char *sign, double amt) {
+    fstream file("data/accounts.dat", ios::binary | ios::in | ios::out);
+    if (!file) {
+        cout << "Error opening file.\n";
+        return;
+    }
+
+    Account temp;
+    bool found = false;
+
+    while (file.read(reinterpret_cast<char*>(&temp), sizeof(temp))) {
+        if (temp.accId == accid) {
+            found = true;
+
+            if (sign == "+") {
+                temp.accBalance += amt;
+            } else if (sign == "-") {
+                if (temp.accBalance < amt) {
+                    cout << "Insufficient balance. Operation aborted.\n";
+                    break;
+                }
+                temp.accBalance -= amt;
+            } else {
+                cout << "Invalid sign. Use '+' to deposit or '-' to withdraw.\n";
+                break;
+            }
+
+            file.seekp(-static_cast<int>(sizeof(temp)), ios::cur);
+            file.write(reinterpret_cast<char*>(&temp), sizeof(temp));
+            file.flush();
+
+            cout << "Balance updated. New balance for account " << accid << " is " << temp.accBalance << "\n";
+            break;
+        }
+    }
+
+    if (!found) {
+        cout << "Account not found.\n";
+    }
+
+    file.close();
+}
+
+int Account::getID() { return accId; }
+double Account::getBalance() { return accBalance; }
+const char* Account::getName() { return name; }
