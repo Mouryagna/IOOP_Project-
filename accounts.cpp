@@ -12,7 +12,7 @@ Account::Account() : accId(0), accBalance(0.0) {
 }
 
 void Account::createAccount() {
-    ofstream file("data/accounts.dat", ios::binary | ios::app);
+    ofstream file("accounts.dat", ios::binary | ios::app);
     if (!file) {
         cout << "Error opening file.\n";
         return;
@@ -42,7 +42,7 @@ void Account::createAccount() {
 }
 
 bool Account::loginAccount() {
-    ifstream file("data/accounts.dat", ios::binary);
+    ifstream file("accounts.dat", ios::binary);
     if (!file) {
         cout << "No accounts exist.\n";
         return false;
@@ -85,7 +85,7 @@ void Account::displayAccount() const {
 }
 
 void Account::editAccount() {
-    fstream file("data/accounts.dat", ios::binary | ios::in | ios::out);
+    fstream file("accounts.dat", ios::binary | ios::in | ios::out);
     if (!file) {
         cout << "No accounts exist.\n";
         return;
@@ -141,8 +141,8 @@ void Account::editAccount() {
 }
 
 void Account::deleteAccount() {
-    ifstream inFile("data/accounts.dat", ios::binary);
-    ofstream outFile("data/temp.dat", ios::binary);
+    ifstream inFile("accounts.dat", ios::binary);
+    ofstream outFile("temp.dat", ios::binary);
     if (!inFile || !outFile) {
         cout << "Error opening file.\n";
         return;
@@ -176,17 +176,17 @@ void Account::deleteAccount() {
     outFile.close();
 
     if (!found) {
-        remove("data/temp.dat");
+        remove("temp.dat");
         cout << "Account not found.\n";
         return;
     }
 
-    remove("data/accounts.dat");
-    rename("data/temp.dat", "data/accounts.dat");
+    remove("accounts.dat");
+    rename("temp.dat", "accounts.dat");
 }
 
 void Account::change_balence(int accid, char *sign, double amt) {
-    fstream file("data/accounts.dat", ios::binary | ios::in | ios::out);
+    fstream file("accounts.dat", ios::binary | ios::in | ios::out);
     if (!file) {
         cout << "Error opening file.\n";
         return;
