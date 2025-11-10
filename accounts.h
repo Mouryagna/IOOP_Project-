@@ -26,6 +26,7 @@ class Account{
         const char* getName();
         double getBalance();
         void deleteAccount();
+        void change_balence(int accid,char *sign,double amt);
 };
 
 #endif

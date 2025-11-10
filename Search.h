@@ -7,7 +7,7 @@ using namespace std;
 
 class Search{
     public:
-    void SearchById(int id);
-    void SearchByName(string n);
+    bool SearchById(int id);
+    bool SearchByName(string n);
 };
 #endif
