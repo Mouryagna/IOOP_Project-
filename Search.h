@@ -3,3 +3,11 @@
 #include<iostream>
 #include<fstream>
 #include"accounts.h"
+using namespace std;
+
+class Search{
+    public:
+    void SearchById(int id);
+    void SearchByName(string n);
+};
+#endif

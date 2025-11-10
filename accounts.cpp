@@ -74,6 +74,15 @@ void Account::displayAccount() const {
     cout<<"Account Holder: "<<name;
     cout<<"Balance: "<<accBalance;
 }
+int  Account :: getID(){
+    return accId;
+}
+double Account :: getBalance(){
+    return  accBalance;
+}
+const char* Account::getName() {
+    return name;
+}
 void Account::editAccount() {
     fstream file("data/accounts.dat",ios::binary| ios::in| ios::out);
     if(!file) {
