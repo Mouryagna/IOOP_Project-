@@ -1,9 +1,13 @@
-#include<string>
+#ifndef HASHPASSWORD_H
+#define HASHPASSWORD_H
 
-class Protection{
+#include <string>
+using namespace std;
 
-    public:
-        static const char* generateSalt(int length=8);
-        static const char* HashPass(const char* pass,const char* salt);
-
+class Protection {
+public:
+    char* generateSalt(int length);
+    char* HashPass(const char* password, const char* salt);
 };
+
+#endif

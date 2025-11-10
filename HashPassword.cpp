@@ -3,7 +3,7 @@
 #include"HashPassword.h"
 #include<random>
 
-const char* Protection::generateSalt(int length){
+char* Protection::generateSalt(int length){
     static char salt[50];
     std::string chars ="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     srand(time(0));
@@ -13,7 +13,7 @@ const char* Protection::generateSalt(int length){
     return salt;
 }
 
-const char* Protection::HashPass(const char*pass,const char* salt){
+char* Protection::HashPass(const char*pass,const char* salt){
     static char hashed[50];
     unsigned long hashValue=0;
     

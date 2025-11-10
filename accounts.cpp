@@ -5,6 +5,7 @@
 #include "HashPassword.h"
 using namespace std;
 
+
 Account::Account() : accId(0), accBalance(0.0) {
     strcpy(name, "");
     strcpy(passHash, "");
@@ -27,10 +28,11 @@ void Account::createAccount() {
     cout << "Set Password: ";
     cin >> pass;
 
-    const char* genSalt = Protection::generateSalt(16);
+    Protection pt;
+    const char* genSalt =pt.generateSalt(16);
     strcpy(salt, genSalt);
 
-    const char* hashed = Protection::HashPass(pass, salt);
+    const char* hashed = pt.HashPass(pass, salt);
     strcpy(passHash, hashed);
 
     cout << "Enter Initial Balance: ";
@@ -58,7 +60,8 @@ bool Account::loginAccount() {
     bool found = false;
     while (file.read(reinterpret_cast<char*>(this), sizeof(*this))) {
         if (accId == inId) {
-            const char* hashedInput = Protection::HashPass(inputPass, salt);
+            Protection pt;
+            const char* hashedInput = pt.HashPass(inputPass, salt);
             if (strcmp(passHash, hashedInput) == 0) {
                 cout << "Login successful. Welcome " << name << "!\n";
                 found = true;
@@ -104,7 +107,8 @@ void Account::editAccount() {
         if (accId == searchId) {
             found = true;
 
-            const char* hashedInput = Protection::HashPass(inputPass, salt);
+            Protection pt;
+            const char* hashedInput = pt.HashPass(inputPass, salt);
             if (strcmp(passHash, hashedInput) == 0) {
                 authorized = true;
                 cout << "\nAuthentication Successful.\n";
@@ -117,10 +121,11 @@ void Account::editAccount() {
                 cout << "Enter New Password: ";
                 cin >> newPass;
 
-                const char* newSalt = Protection::generateSalt(16);
+                Protection pt;
+                char* newSalt = pt.generateSalt(16);
                 strcpy(salt, newSalt);
 
-                const char* newHash = Protection::HashPass(newPass, salt);
+                const char* newHash = pt.HashPass(newPass, salt);
                 strcpy(passHash, newHash);
 
                 int pos = -1 * static_cast<int>(sizeof(*this));
@@ -160,7 +165,8 @@ void Account::deleteAccount() {
     while (inFile.read(reinterpret_cast<char*>(this), sizeof(*this))) {
         if (accId == delId) {
             found = true;
-            const char* hashedInput = Protection::HashPass(inputPass, salt);
+            Protection pt;
+            const char* hashedInput = pt.HashPass(inputPass, salt);
             if (strcmp(passHash, hashedInput) == 0) {
                 cout << "Account " << accId << " (" << name << ") deleted successfully.\n";
                 deleted = true;

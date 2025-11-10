@@ -1,4 +1,5 @@
 #include"Search.h"
+#include"accounts.h"
 #include<cstring>
 bool Search::SearchById(int id){
     ifstream file("data/accounts.dat",ios::binary);

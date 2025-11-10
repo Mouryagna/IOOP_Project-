@@ -74,8 +74,9 @@ void hashDemo() {
     cout<<"Enter a password to hash: ";
     cin>> pass;
 
-    const char* salt=Protection::generateSalt(8);
-    const char* hashed=Protection::HashPass(pass.c_str(),salt);
+    Protection pt;
+    char* salt=pt.generateSalt(8);
+    char* hashed=pt.HashPass(pass.c_str(),salt);
     cout<<"Generated Salt: "<<salt<<endl;
     cout<<"Hashed Password: "<<hashed<<endl;
     cout<<"\n============================================================\n";
