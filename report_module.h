@@ -1,7 +1,6 @@
 #ifndef REPORT_H
 #define REPORT_H
 
-#include"accounts.h"
 #include<vector>
 using namespace std;
 
