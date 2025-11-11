@@ -174,7 +174,7 @@ void Account::deleteAccount() {
             } else {
                 cout << "Incorrect password. Deletion aborted.\n";
             }
-        }
+        } 
         outFile.write(reinterpret_cast<char*>(this), sizeof(*this));
     }
 
