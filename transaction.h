@@ -15,7 +15,7 @@ class Transaction{
 public:
     Transaction();
 
-    void recordTransaction(int accID,double amt,char*ttyp,char*data);
+    void recordTransaction(long long int accID,double amt,char*ttyp,char*data);
     void displayTransaction();
 
     void deposite(int accId,double amount);

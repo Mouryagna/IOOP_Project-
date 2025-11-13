@@ -234,6 +234,16 @@ void Account::change_balence(int accid, char *sign, double amt) {
     file.close();
 }
 
-int Account::getID() { return accId; }
+void Account::deleteAllAccounts() {
+    ofstream file("accounts.dat", ios::binary | ios::trunc);
+    if (!file) {
+        cout << "Error opening accounts file.\n";
+        return;
+    }
+    file.close();
+    cout << "✅ All accounts have been permanently deleted.\n";
+}
+
+long long int Account::getID() { return accId; }
 double Account::getBalance() { return accBalance; }
 const char* Account::getName() { return name; }

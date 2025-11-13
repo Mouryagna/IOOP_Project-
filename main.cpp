@@ -19,6 +19,7 @@ void printMenu() {
     cout<<"7. Display All Accounts"<<endl;
     cout<<"8. Reports"<<endl;
     cout<<"9. Search Account"<<endl;
+    cout<<"10. Delete All Accouts"<<endl;
     cout<<"0. Exit"<<endl;
     cout<<"Enter your Choice: ";
     cout<<"\n============================================================\n";
@@ -114,7 +115,7 @@ int main() {
                 double amt;
                 cout<<"Enter Account ID: ";
                 cin>>id;
-                cout<<"Enter Amount to Withdraw";
+                cout<<"Enter Amount to Withdraw:";
                 cin>>amt;
 
                 time_t now = time(0);
@@ -127,7 +128,7 @@ int main() {
             case 7: rep.displayAllAccounts();break;
             case 8: reportMenu(rep);break;
             case 9: searchMenu();break;
-            case 10: hashDemo(); break;
+            case 10: acc.deleteAllAccounts(); break;
             case 0:
                 cout<<"\nThank you for using the Bank Management System!"<<endl;break;
             default:

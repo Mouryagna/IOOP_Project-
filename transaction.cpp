@@ -17,7 +17,7 @@ Transaction::Transaction(){
 
 }
 
-void Transaction::recordTransaction(int accID,double amt,char *ttyp,char *tdate){
+void Transaction::recordTransaction(long long int accID,double amt,char *ttyp,char *tdate){
     Search s;
     if(!s.SearchById(accID)){
         cout << "Account not found for ID: " << accID << endl;
