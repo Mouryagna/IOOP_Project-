@@ -60,7 +60,7 @@ void Transaction::deposite(int accId, double amt) {
     }
 
     Search s;
-    if (!s.SearchById(accId)) {
+    if (s.SearchById(accId)==false) {
         std::cout << "Account not found for ID: " << accId << std::endl;
         return;
     }

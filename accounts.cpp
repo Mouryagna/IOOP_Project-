@@ -205,9 +205,9 @@ void Account::change_balence(int accid, char *sign, double amt) {
         if (temp.accId == accid) {
             found = true;
 
-            if (sign == "+") {
+            if (strcmp(sign, "+") == 0 ) {
                 temp.accBalance += amt;
-            } else if (sign == "-") {
+            } else if (strcmp(sign, "-") == 0) {
                 if (temp.accBalance < amt) {
                     cout << "Insufficient balance. Operation aborted.\n";
                     break;

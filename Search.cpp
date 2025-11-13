@@ -2,7 +2,7 @@
 #include"accounts.h"
 #include<cstring>
 bool Search::SearchById(int id){
-    ifstream file("data/accounts.dat",ios::binary);
+    ifstream file("accounts.dat",ios::binary);
     Account acc;
     bool found = false;
     while(file.read((char*)&acc,sizeof(acc))){
@@ -18,7 +18,7 @@ bool Search::SearchById(int id){
 }
 
 bool Search::SearchByName(string n) {
-    ifstream file("data/accounts.dat", ios::binary);
+    ifstream file("accounts.dat", ios::binary);
     Account acc;
     bool found = false;
 
