@@ -28,7 +28,6 @@ void report::displayAllAccounts(){
 
     while(fin.read(reinterpret_cast<char *>(&acc),sizeof(acc))){
         acc.displayAccount();
-
     }
 
     fin.close();

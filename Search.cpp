@@ -12,11 +12,9 @@ bool Search::SearchById(int id){
                         return found;
         }
     }
-    if(!found){
-        cout<<" Account not found.\n";
-        return found;
-    }
     file.close();
+    cout<<" Account not found.\n";
+    return found;
 }
 
 bool Search::SearchByName(string n) {
@@ -31,10 +29,8 @@ bool Search::SearchByName(string n) {
             return found;
         }
     }
-    if (!found){ 
-        cout << "Account not found.\n";
-        return found;
     
-    };
     file.close();
+    cout << "Account not found.\n";
+    return found;
 }

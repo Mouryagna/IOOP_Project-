@@ -8,7 +8,7 @@ using namespace std;
 
 class Account{
 
-    int accId;
+    long long int accId;
     char name[30];
     double accBalance;
     int length=8;
@@ -22,11 +22,13 @@ class Account{
         bool loginAccount();
         void displayAccount() const;
         void editAccount();
-        int getID();
+        long long int getID();
         const char* getName();
         double getBalance();
         void deleteAccount();
         void change_balence(int accid,char *sign,double amt);
+        void deleteAllAccounts();
+
 };
 
 #endif
