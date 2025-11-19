@@ -1,0 +1,17 @@
+How to Run This Project
+
+1.Open Visual Studio Code
+Launch VS Code and open the project folder.
+
+2.Open the Terminal
+Press Ctrl + ` (Ctrl + tilde) to open the integrated terminal.
+
+3.Compile the Project
+Run the following command in the terminal:
+
+g++ main.cpp accounts.cpp report_module.cpp Search.cpp transaction.cpp HashPassword.cpp -o main
+
+
+4.Run the Executable
+
+./main
