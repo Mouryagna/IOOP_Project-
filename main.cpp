@@ -19,7 +19,6 @@ void printMenu() {
     cout<<"7. Display All Accounts"<<endl;
     cout<<"8. Reports"<<endl;
     cout<<"9. Search Account"<<endl;
-    cout<<"10. Delete All Accouts"<<endl;
     cout<<"0. Exit"<<endl;
     cout<<"Enter your Choice: ";
     cout<<"\n============================================================\n";

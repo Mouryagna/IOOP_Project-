@@ -14,7 +14,6 @@ class report{
         void showTopCustomers(int topN=3);
         void showLowBalenceAccounts(double limit);
         void transactionReport();
-
 };
 
 
